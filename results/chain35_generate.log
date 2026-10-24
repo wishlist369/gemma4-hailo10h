@@ -1,0 +1,23 @@
+19:19 35-layer tbt chain generation
+configured 12 chunks (tbtonly) in 26.5s; cfg ms prefill [] tbt [371, 529, 555, 1026, 1445, 1795, 2368, 2478, 3315, 3298, 3051, 3324]
+prefill(tbt) tok 0/35 402.1 ms
+prefill(tbt) tok 10/35 437.9 ms
+prefill(tbt) tok 20/35 435.1 ms
+prefill(tbt) tok 30/35 439.1 ms
+prefill(tbt) tok 34/35 435.3 ms
+prefill total 35 tok 15288 ms
+[0] id 98665 '서울' tbt 437.1 ms
+[1] id 15245 '입니다' tbt 436.4 ms
+[2] id 236761 '.' tbt 439.6 ms
+[3] id 154960 ' 유명' tbt 436.3 ms
+[4] id 237384 '한' tbt 456.5 ms
+[5] id 189861 ' 음식' tbt 434.4 ms
+[6] id 168896 '으로는' tbt 439.5 ms
+[7] id 18937 ' 비' tbt 443.5 ms
+[8] id 246941 '빔' tbt 438.7 ms
+[9] id 242152 '밥' tbt 440.4 ms
+[10] id 237077 '이' tbt 439.4 ms
+[11] id 27028 ' 있습니다' tbt 442.1 ms
+[12] id 236761 '.' tbt 440.7 ms
+=== output: 서울입니다. 유명한 음식으로는 비빔밥이 있습니다.
+14 tokens, 630 ms/token

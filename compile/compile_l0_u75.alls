@@ -1,0 +1,4 @@
+performance_param(compiler_optimization_level=0)
+context_switch_param(max_compute_16bit_utilization=0.6, max_compute_utilization=0.75, max_control_utilization=0.75, max_memory_utilization=0.75)
+resources_param(max_compute_16bit_utilization=0.8, max_utilization=0.9)
+allocator_param(timeout=14400)

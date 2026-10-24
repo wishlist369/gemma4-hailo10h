@@ -1,0 +1,10 @@
+__pycache__/
+*.hef
+*.har
+*.npz
+*.npy
+host/
+model/
+calib_texts/
+out/
+chunk/

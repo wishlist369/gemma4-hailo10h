@@ -1,0 +1,8 @@
+Code in this repository: MIT (see LICENSE).
+
+Compiled HEF files attached to GitHub Releases contain quantized weights derived from
+Google's Gemma 4 E2B (google/gemma-4-E2B-it), which is licensed under the Apache License 2.0.
+Gemma is a trademark of Google LLC. This project is not affiliated with or endorsed by Google or Hailo.
+
+Hailo Dataflow Compiler, HailoRT and the Qwen2-1.5B reference HAR are Hailo Technologies' software
+and are NOT included here; obtain them from Hailo (developer zone / dev-public.hailo.ai).
