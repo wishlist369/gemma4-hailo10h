@@ -1,4 +1,4 @@
-# hf_bench.py (CT142): 벤치 프롬프트 세트 → HF bf16 greedy N토큰 참조(prompt_ids, hf_ids) 저장. 사용: python hf_bench.py bench_prompts.json out/hf_bench.json 24
+# hf_bench.py (DFC 호스트): 벤치 프롬프트 세트 → HF bf16 greedy N토큰 참조(prompt_ids, hf_ids) 저장. 사용: python hf_bench.py bench_prompts.json out/hf_bench.json 24
 import sys, json, torch, time
 from transformers import AutoTokenizer, AutoModelForCausalLM
 torch.set_num_threads(4)

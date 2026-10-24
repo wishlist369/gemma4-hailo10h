@@ -1,5 +1,5 @@
 #!/bin/bash
-# chunk_quant_env6.sh (CT142; + LSMODE=norm|conv|none; + NOKV=1 → g4conv --no_kvout; + TAP=레이어명 → g4conv --tap(탭 그래프); + CALIB_FULL=1·PROMPT_FILE=경로 → g4chunk 보정셋 풀윈도우·긴 참조 프롬프트; chunk_quant.sh + QENV 환경변수 전달, 예 QENV="GM8=1"): 청크 1개 양자화(R2, ctx512 기본, PLE split=블록별 입력). 사용: ./chunk_quant.sh <name> <lo-hi> [ctx=512] [calib=12] [EVAL=fp] [head=chunk|hidden]
+# chunk_quant_env6.sh (DFC 호스트; + LSMODE=norm|conv|none; + NOKV=1 → g4conv --no_kvout; + TAP=레이어명 → g4conv --tap(탭 그래프); + CALIB_FULL=1·PROMPT_FILE=경로 → g4chunk 보정셋 풀윈도우·긴 참조 프롬프트; chunk_quant.sh + QENV 환경변수 전달, 예 QENV="GM8=1"): 청크 1개 양자화(R2, ctx512 기본, PLE split=블록별 입력). 사용: ./chunk_quant.sh <name> <lo-hi> [ctx=512] [calib=12] [EVAL=fp] [head=chunk|hidden]
 #   g4conv(head chunk) → g4chunk(HF 정답+보정셋; hidden_in·공유 K/V 포함) → (lo=0이면 g4conv 재실행으로 압축 어휘) → p1_quant(KV=off EMU=1 EVAL=$EVAL) → HAR
 cd /root/hailo/g4 || exit 1; mkdir -p chunk; chmod 777 chunk
 n=$1; L=$2; CTX=${3:-512}; NC=${4:-12}; EV=${5:-fp}; HEAD=${6:-chunk}; PY=/root/hailo/exp/bin/python

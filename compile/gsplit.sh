@@ -1,5 +1,5 @@
 #!/bin/bash
-# gsplit.sh (CT142): g_list.txt(<name> <src q.har 접두> <cache_off>) 순차 분리 — NET_NAME=g4_<name>, CACHE_OFF → chunk/<name>_tbt.har, meta/ref 복사, out/kvx_<name>.log 'SPLIT OK'
+# gsplit.sh (DFC 호스트): g_list.txt(<name> <src q.har 접두> <cache_off>) 순차 분리 — NET_NAME=g4_<name>, CACHE_OFF → chunk/<name>_tbt.har, meta/ref 복사, out/kvx_<name>.log 'SPLIT OK'
 cd /root/hailo/g4 || exit 1; IMG=hailo_ai_sw_suite_2026-08:1
 while read n src off; do
   [ -z "$n" ] && continue; L=out/kvx_$n.log

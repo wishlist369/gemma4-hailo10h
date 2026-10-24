@@ -1,4 +1,4 @@
-# har_split.py (CT142 docker): KV=on 멀티 scope HAR에서 한 scope(예 gemma4__tbt)만 독립 네트워크 HAR로 추출 — base_layer 공유 가중치를 자기 이름으로 복제
+# har_split.py (DFC docker): KV=on 멀티 scope HAR에서 한 scope(예 gemma4__tbt)만 독립 네트워크 HAR로 추출 — base_layer 공유 가중치를 자기 이름으로 복제
 # 사용: python har_split.py <src.har> <dst.har> <scope>
 # har_split_cid.py: + env NET_NAME=<name> → hn/native/fp name·metadata model_name 교체(HailoRT CacheManager가 core_op 이름으로 캐시를 등록 — 청크마다 달라야 동시 상주)
 # + env CACHE_OFF=<n> → 모든 cache_id에 n을 더함(청크 HEF끼리 cache_id 0..가 겹쳐 동시 configure 실패하는 문제 회피, 10-24)

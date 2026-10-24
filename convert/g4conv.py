@@ -1,6 +1,6 @@
 # g4conv: Gemma 4 E2B(HF) → Hailo HN(dict) + params(npz) 직접 생성기
 # Qwen2 내부 HAR fp.hn을 "부품 틀"로 써서 역할별 params를 복사하고 모양만 Gemma에 맞춘다.
-# 사용(CT142 exp venv): python g4conv.py --layers 0-4 --out p1/pilot   → pilot.hn.json, pilot_params.npz, pilot_meta.json
+# 사용(DFC 호스트 exp venv): python g4conv.py --layers 0-4 --out p1/pilot   → pilot.hn.json, pilot_params.npz, pilot_meta.json
 import argparse, json, copy, math
 import numpy as np
 import torch

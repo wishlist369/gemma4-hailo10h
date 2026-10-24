@@ -1,4 +1,4 @@
-# g4rt_host: Gemma4-on-Hailo 런타임 호스트 측(numpy만, torch 없음) — CT141용
+# g4rt_host: Gemma4-on-Hailo 런타임 호스트 측(numpy만, torch 없음) — 디바이스 호스트용
 #   토크나이저(tokenizers) · 임베딩(bf16 테이블 룩업 ×√D) · PLE(토큰 PLE + 투영 RMSNorm) · 마스크/RoPE 입력 · tied lm_head(+softcap) · 샘플링
 #   g4host.G4Host(torch)와 수치 동일해야 함(test_rt_host.py로 대조). 텐서 레이아웃 NHWC [1,1,W,ch], 왼쪽 패딩
 import json, math, os

@@ -1,5 +1,5 @@
 #!/bin/bash
-# gcomp.sh (CT142) <name...>: 각 이름의 SPLIT OK 대기 → u75 컴파일(--cpus 4) → chunk/<name>_tbt.hef, out/gcomp.log 'COMPILE OK|FAILED <name>'
+# gcomp.sh (DFC 호스트) <name...>: 각 이름의 SPLIT OK 대기 → u75 컴파일(--cpus 4) → chunk/<name>_tbt.hef, out/gcomp.log 'COMPILE OK|FAILED <name>'
 cd /root/hailo/g4 || exit 1; IMG=hailo_ai_sw_suite_2026-08:1
 for n in "$@"; do
   until grep -q -E "SPLIT (OK|FAILED) $n" out/kvx_$n.log 2>/dev/null; do sleep 60; done

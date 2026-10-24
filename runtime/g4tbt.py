@@ -1,4 +1,4 @@
-# g4tbt.py (CT141): 플랜 A 런타임 — 청크별 prefill 그룹(96토큰 블록) + tbt 그룹(1토큰) KV 캐시 상주 생성.
+# g4tbt.py (디바이스 호스트): 플랜 A 런타임 — 청크별 prefill 그룹(96토큰 블록) + tbt 그룹(1토큰) KV 캐시 상주 생성.
 #   사용: python -u g4tbt.py --chunks k00kv,... [--prompt ...] [--max_new 32] [--gap 0.003] [--order cache_first|cur_first] [--upd before|after] [--ref ref.npz]
 #   청크 n: /opt/g4/n_prefill.hef, /opt/g4/n_tbt.hef, /opt/g4/n_meta.json. 모든 그룹 상주(configure 1회). 공유 KV(kv_ext)는 k04류 청크의 kv_out 현재 행을 그대로 다음 청크 입력으로.
 import argparse, json, os, sys, time, numpy as np

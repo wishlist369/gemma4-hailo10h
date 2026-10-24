@@ -1,4 +1,4 @@
-# g4calib: 보정/평가 데이터 생성 (exp venv). 채팅 샘플(FP 답변) + 한국어 장문(개발일지) 혼합, 길이 다양
+# g4calib: 보정/평가 데이터 생성 (exp venv). 채팅 샘플(FP 답변) + 한국어 장문(임의 텍스트) 혼합, 길이 다양
 # 출력: <out>.npz  — 입력별 [N,1,W,ch] + ids 목록
 import argparse, json, glob, random
 import numpy as np

@@ -1,4 +1,4 @@
-# g4export.py (CT142 exp venv): 런타임 호스트 테이블 추출 → host/ (bf16 원시 비트 uint16 npy, fp32 npy, 토크나이저)
+# g4export.py (DFC 호스트 exp venv): 런타임 호스트 테이블 추출 → host/ (bf16 원시 비트 uint16 npy, fp32 npy, 토크나이저)
 #   embed_tokens [V,D] bf16(임베딩 룩업 + tied lm_head), embed_tokens_per_layer [V, NL*PLE] bf16, per_layer_model_projection [NL*PLE, D] fp32,
 #   per_layer_projection_norm [NL*PLE] fp32, norm.weight [D] fp32, config.json, tokenizer*
 import json, os, shutil, sys
