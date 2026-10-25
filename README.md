@@ -11,6 +11,22 @@ Gemma 4 isn't in Hailo's model zoo, and Hailo's GenAI runtime (`hailort::genai::
 > Status: **v0.1, experimental.** It works end-to-end, but it's slow. On the same box a CPU `llama.cpp` will probably beat it.
 > The goal was "make it run", not "make it fast".
 
+![demo: real Hailo-10H run](assets/demo.gif)
+
+*Recorded on the device. Decoding is shown in real time; the one-time startup (8×) and the prompt (4×) are sped up and labeled. Full quality: [assets/demo.mp4](assets/demo.mp4).*
+
+## Quick start (precompiled, no DFC needed)
+
+Requirements: a Hailo-10H with the HailoRT **5.4.0** driver and firmware, plus the matching `hailort` Python wheel from the Hailo Developer Zone. You also need about 17 GB of free disk during install (HEFs 1.1 GB, the HF model, and 5.5 GB of host tables) and 8 GB of RAM.
+
+```bash
+git clone https://github.com/wishlist369/gemma4-hailo10h && cd gemma4-hailo10h
+PY=/path/to/venv/bin/python ./install.sh ~/g4hailo   # downloads the HEFs (sha256 checked) and google/gemma-4-E2B-it, exports host tables
+cd ~/g4hailo && /path/to/venv/bin/python g4chat.py   # about 26 s startup, then type prompts
+```
+
+`g4chat.py` keeps all 12 network groups resident and starts each prompt with a fresh KV cache, so every prompt is a single turn. Prompt plus answer is limited to 511 tokens. Use `--prompt "..."` for a one-shot run and `--temp 0.7` to sample instead of greedy decoding.
+
 ## Results (Hailo-10H, HailoRT 5.4.0, FW 5.4.0)
 
 Example generation (greedy, Korean prompt "What's the capital of Korea? One sentence, plus one famous food"):
@@ -35,7 +51,8 @@ Moving to the on-chip KV cache cost essentially no accuracy. The remaining gap t
 
 | | value |
 |---|---|
-| Decode step (35 layers, 12 network groups) | **435 ms/token, about 2.3 tokens/s** (median 434.8, p90 437.8) |
+| Decode step on the NPU (35 layers, 12 network groups) | **435 ms/token, about 2.3 tokens/s** (median 434.8, p90 437.8) |
+| End to end, including host lm_head and sampling | about 2.1 tokens/s (as in the demo) |
 | Configure all 12 groups (they stay resident) | 26 s, once at startup |
 | Prompt processing | 435 ms per prompt token (see limitations) |
 
@@ -83,10 +100,10 @@ The non-obvious findings are written up in [`docs/NOTES.md`](docs/NOTES.md). The
 
 | dir | what | runs on |
 |---|---|---|
-| `convert/` | `g4conv.py`: HF → Hailo HN + params. `g4chunk.py`: per-chunk calibration data and HF reference. `g4export.py`: host tables. `g4host.py`: torch reference preprocessing. `hf_bench.py`: builds the scoring benchmark | DFC machine (torch + transformers venv) |
+| `convert/` | `g4conv.py`: HF → Hailo HN + params. `g4chunk.py`: per-chunk calibration data and HF reference. `g4export.py` / `g4export_np.py`: host tables (`_np` is torch-free and gives byte-identical output). `g4host.py`: torch reference preprocessing. `hf_bench.py`: builds the scoring benchmark | DFC machine (torch + transformers venv) |
 | `quant/` | `chunk_quant.sh`, `p1_quant.py`: quantize one chunk with KV on. `kvq.sh` + `kv_list.txt`: the 12-chunk batch | DFC docker |
 | `compile/` | `har_split_cid.py`: extract the tbt scope with a unique name and cache_id offset. `gsplit.sh` + `g_list.txt`: split batch. `gcomp.sh`, `p1_compile.py`, `compile_l0_u75.alls`: compile | DFC docker |
-| `runtime/` | `g4tbt.py`: generate. `g4tbt_score.py`: teacher-forced scoring. `g4rt_host.py`: host side. `hf_bench.json`: the benchmark | Hailo-10H host (HailoRT 5.4 Python) |
+| `runtime/` | `g4chat.py`: interactive CLI. `g4tbt.py`: generate (debug flags). `g4tbt_score.py`: teacher-forced scoring. `g4rt_host.py`: host side. `hf_bench.json`: the benchmark | Hailo-10H host (HailoRT 5.4 Python) |
 | `results/` | logs and JSON behind the numbers above | |
 
 Code comments are mostly in Korean (it was a personal project). Paths are the ones from my setup (`/root/hailo/g4`, docker `/work2`, `/opt/g4`). Adjust them for yours.
@@ -112,7 +129,7 @@ Steps:
    ```
    compile/gcomp.sh g00 g03 …
    ```
-4. Export the host tables (`convert/g4export.py`) and copy them, plus the 12 `gNN_tbt.hef` + `gNN_meta.json`, to the runtime host.
+4. Export the host tables (`convert/g4export_np.py <model_dir> <host_dir>`) and copy them, plus the 12 `gNN_tbt.hef` + `gNN_meta.json`, to the runtime host.
 5. Generate:
    ```
    python runtime/g4tbt.py --chunks g00,g03,g06,g09,g12,g15,g18,g21,g24,g27,g30,g33 --mode tbtonly
@@ -122,7 +139,7 @@ Steps:
    python runtime/g4tbt_score.py --chunks … --bench runtime/hf_bench.json
    ```
 
-Precompiled HEFs are attached to the GitHub Release (about 1.1 GB total). With those you can skip steps 1–3, but you still need step 4.
+Precompiled HEFs are attached to the GitHub Release (about 1.1 GB total). `install.sh` covers steps 4–5 with them.
 
 ## Known limitations / TODO
 
@@ -130,7 +147,7 @@ Precompiled HEFs are attached to the GitHub Release (about 1.1 GB total). With t
   - The prefill network group (96-token blocks) compiles and runs.
   - Handing its KV state over to the tbt group isn't solved yet. So the prompt is fed token by token: 35 tokens take about 15 s.
 - **The DFC crashes on 6-block groups.** Fusing 6 blocks per group would cut group switches in half, but the DFC 5.4 allocator crashes deterministically on the final context.
-- **HailoRT prints errors at exit.** You get `Lost communication with the server … VDevice is released while the CIM is in use` spam, because configured models aren't closed before the VDevice. It's harmless.
+- **`g4tbt.py` and `g4tbt_score.py` print errors at exit.** You get `Lost communication with the server …` spam because they don't close the configured models before the VDevice. It's harmless, and `g4chat.py` shuts down cleanly.
 - **Context is capped at 512 tokens.** That's the cache size. Gemma's sliding window is also 512.
 - **lm_head runs on the host CPU.**
 
